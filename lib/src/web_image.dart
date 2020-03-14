@@ -6,12 +6,14 @@ class WebImage<T extends ImageProvider> implements ImageProvider<T> {
   final T image;
   final ImageProvider placeholder;
   final ImageProvider error;
+
   ImageStream _stream;
   ImageConfiguration _configuration;
 
   @override
   Future<bool> evict(
-    {ImageCache cache, ImageConfiguration configuration = ImageConfiguration.empty}) {
+      {ImageCache cache,
+      ImageConfiguration configuration = ImageConfiguration.empty}) {
     return image.evict(cache: cache, configuration: configuration);
   }
 
@@ -28,25 +30,29 @@ class WebImage<T extends ImageProvider> implements ImageProvider<T> {
   @override
   ImageStream resolve(ImageConfiguration configuration) {
     _configuration = configuration;
-    _stream = image.resolve(configuration);
+    final stream = image.resolve(configuration);
+
+    // Stream is the same
+    if (stream.key == _stream?.key) {
+      return _stream;
+    }
 
     // Set placeholder
     if (placeholder != null) {
       final listener = ImageStreamListener((imageInfo, _) async {
         // ignore: invalid_use_of_protected_member
-        _stream.completer.setImage(imageInfo);
+        stream.completer.setImage(imageInfo);
       });
       placeholder.resolve(configuration).addListener(listener);
     }
 
     // Set error image
     if (error != null) {
-      final listener = ImageStreamListener((_, __){}, onError: (e, _){
-
+      final listener = ImageStreamListener((_, __) {}, onError: (e, _) {
         if (error != null) {
           final listener = ImageStreamListener((imageInfo, _) async {
             // ignore: invalid_use_of_protected_member
-            _stream.completer.setImage(imageInfo);
+            stream.completer.setImage(imageInfo);
           });
 
           error.resolve(_configuration).addListener(listener);
@@ -55,8 +61,10 @@ class WebImage<T extends ImageProvider> implements ImageProvider<T> {
 
         throw e;
       });
-      _stream.addListener(listener);
+      stream.addListener(listener);
     }
-    return _stream;
+
+    _stream = stream;
+    return stream;
   }
 }

@@ -1,7 +1,6 @@
 name: web_image
 description: A control placeholder and error image for image provider.
-version: 0.0.1
-author:
+version: 0.0.1+1
 homepage: https://github.com/markgravity/web_image
 
 environment:
@@ -13,7 +12,7 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
+    sdk: flutterd
   mockito: ^4.1.1
 
 # For information on the generic Dart part of this file, see the

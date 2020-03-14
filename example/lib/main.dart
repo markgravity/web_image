@@ -29,15 +29,13 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final placeholder = "https://cdn.tgdd.vn/Files/2019/12/27/1228724/facebook-messenger_800x450.jpg";
-    final url =
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Facebook_F_icon.svg/1200px-Facebook_F_icon.svg.png";
     return Container(
-      child: Image(
-        image: WebImage(
-          NetworkImage("placeholder"),
-          placeholder: NetworkImage(placeholder),
-          error: NetworkImage(url),
+      child: CircleAvatar(
+        radius: 30,
+        backgroundImage: WebImage(
+          NetworkImage("https://cdn.tuoitre.vn/thumb_w/586/2019/5/8/avatar-publicitystill-h2019-1557284559744252594756.jpg"),
+          placeholder: AssetImage("assets/avatar-default-md.png"),
+//          error: AssetImage("assets/avatar-default-md.png"),
         ),
       ),
     );
